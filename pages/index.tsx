@@ -15,15 +15,15 @@ const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [topic, setTopic] = useState("");
   const [platform, setPlatform] = useState<PlatformType>("微博");
-  const [generatedBios, setGeneratedBios] = useState<String>("");
+  const [generatedText, setGeneratedText] = useState<String>("");
 
-  console.log("Streamed response: ", generatedBios);
+  console.log("Streamed response: ", generatedText);
 
-  const prompt = "";
+  const prompt = `你是一位社交媒体运营专家，擅长撰写符合各种社交媒体平台的运营文案，文案内容和长短契合对应平台整体风格。请针对${platform}用户，围绕以下话题写一段文案：${topic}`;
 
-  const generateBio = async (e: any) => {
+  const generateContent = async (e: any) => {
     e.preventDefault();
-    setGeneratedBios("");
+    setGeneratedText("");
     setLoading(true);
     const response = await fetch("/api/generate", {
       method: "POST",
@@ -54,7 +54,7 @@ const Home: NextPage = () => {
       const { value, done: doneReading } = await reader.read();
       done = doneReading;
       const chunkValue = decoder.decode(value);
-      setGeneratedBios((prev) => prev + chunkValue);
+      setGeneratedText((prev) => prev + chunkValue);
     }
 
     setLoading(false);
@@ -71,7 +71,7 @@ const Home: NextPage = () => {
       <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
         <a
           className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-600 shadow-md transition-colors hover:bg-gray-100 mb-5"
-          href="https://github.com/Nutlope/twittertopic"
+          href="https://github.com/aiyogg/copywriter"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -118,7 +118,7 @@ const Home: NextPage = () => {
           {!loading && (
             <button
               className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
-              onClick={(e) => generateBio(e)}
+              onClick={(e) => generateContent(e)}
             >
               生成文案 &rarr;
             </button>
@@ -141,7 +141,7 @@ const Home: NextPage = () => {
         <ResizablePanel>
           <AnimatePresence mode="wait">
             <motion.div className="space-y-10 my-10">
-              {generatedBios && (
+              {generatedText && (
                 <>
                   <div>
                     <h2 className="sm:text-4xl text-3xl font-bold text-slate-900 mx-auto">
@@ -149,8 +149,8 @@ const Home: NextPage = () => {
                     </h2>
                   </div>
                   <div className="space-y-8 flex flex-col items-center justify-center max-w-xl mx-auto">
-                    {generatedBios
-                      .substring(generatedBios.indexOf("1") + 3)
+                    {generatedText
+                      .substring(generatedText.indexOf("1") + 3)
                       .split("2.")
                       .map((generatedBio) => {
                         return (
